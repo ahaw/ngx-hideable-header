@@ -1,12 +1,13 @@
 {
   "name": "ngx-hideable-header",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahaw/ngx-hideable-header.git"
   },
+  "readme": "README",
+  "license": "LICENSE",
   "author": "Arkadiusz Hnat",
-  "license": "MIT",
   "private": true,
   "peerdependencies": {
     "@angular/common": "^6.1.3",

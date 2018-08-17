@@ -3,7 +3,7 @@
 This is a library with directive to easily make header hideable (or sticky).
 
 
-#Demo
+###Demo
  
  https://ngx-hideable-header.firebaseapp.com
 
