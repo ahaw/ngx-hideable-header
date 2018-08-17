@@ -1,19 +1,14 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Inject,
-  Input,
-  isDevMode,
-  OnInit,
-  PLATFORM_ID,
-  Renderer2
-} from "@angular/core";
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
+import { Directive, ElementRef, HostListener, Inject, Input, isDevMode, OnInit, PLATFORM_ID, Renderer2, Optional } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig } from './hideable-header.models';
 
+const defaultTranslate = {
+  translateValue1: -80,
+  translateValue2: 0
+};
 
 @Directive({
-  selector: "[hideableHeader]",
+  selector: '[hideableHeader]',
   host: {
     '[style.position]': '"fixed"',
     '[style.top]': '"0"',
@@ -21,16 +16,20 @@ import { DOCUMENT, isPlatformBrowser } from "@angular/common";
     '[style.transition]': '"all 0.5s"'
   }
 })
-export class HideableHeaderDirective implements OnInit {
-
-  private c = 0;
+export class HideableHeaderDirective {
+  private lastScrollTop = 0;
   private currentScrollTop = 0;
-  @Input("hideOnScrollDown")
-  private hideOnScrollDown: boolean = true;
-  constructor(private headerElement: ElementRef, private render: Renderer2, @Inject(PLATFORM_ID) private platformId: string) {
-  }
+  @Input() private hideOnScrollDown = true;
+  constructor(
+    private headerElement: ElementRef,
+    private render: Renderer2,
+    @Inject(PLATFORM_ID) private platformId: string,
+    @Inject(HIDEABLE_HEADER_CONFIG)
+    @Optional()
+    private config: HideableHeaderConfig = defaultTranslate
+  ) {}
 
-  @HostListener("window:scroll", [])
+  @HostListener('window:scroll', [])
   onWindowScroll(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
@@ -40,19 +39,16 @@ export class HideableHeaderDirective implements OnInit {
       return;
     }
 
-    const a = window.document.scrollingElement.scrollTop;
-    const b = this.headerElement.nativeElement.clientHeight;
+    const scrollTop = window.document.scrollingElement.scrollTop;
+    const clientHeight = this.headerElement.nativeElement.clientHeight;
 
-    this.currentScrollTop = a;
-    if (this.c > 0 && this.c < this.currentScrollTop && a > b + b) {
-      this.render.setStyle(this.headerElement.nativeElement, "transform", "translateY(-80px)")
-    } else if (this.c > this.currentScrollTop && !(a <= b)) {
-      this.render.setStyle(this.headerElement.nativeElement, "transform", "translateY(0px)")
+    this.currentScrollTop = scrollTop;
+    if (this.lastScrollTop > 0 && this.lastScrollTop < this.currentScrollTop && scrollTop > clientHeight + clientHeight) {
+      this.render.setStyle(this.headerElement.nativeElement, 'transform', `translateY(${this.config.translateValue1}px)`);
+    } else if (this.lastScrollTop > this.currentScrollTop && !(scrollTop <= clientHeight)) {
+      this.render.setStyle(this.headerElement.nativeElement, 'transform', `translateY(${this.config.translateValue2}px)`);
     }
 
-    this.c = this.currentScrollTop;
-  }
-
-  ngOnInit(): void {
+    this.lastScrollTop = this.currentScrollTop;
   }
 }

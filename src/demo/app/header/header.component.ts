@@ -1,15 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: "ngx-root",
-  templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.css"]
+  selector: 'ngx-root',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
-  public shouldBeSticky: boolean;
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
+export class HeaderComponent {
+  public hideOnScrollDown: boolean;
 }

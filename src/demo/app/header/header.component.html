@@ -1,8 +1,8 @@
 <div class="container">
-    <nav hideableHeader [hideOnScrollDown]=!shouldBeSticky>
+    <nav hideableHeader [hideOnScrollDown]=hideOnScrollDown>
         <a href="#" id="brand">Brand</a>
     </nav>
     <div class="content">
-        <input (change)="shouldBeSticky = !shouldBeSticky" type="checkbox"> Should be sticky?
+        <input (change)="hideOnScrollDown = !hideOnScrollDown" type="checkbox"> Hide On Scroll Down?
     </div>
 </div>

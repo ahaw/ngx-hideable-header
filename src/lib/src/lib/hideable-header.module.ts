@@ -1,9 +1,21 @@
-import { NgModule } from "@angular/core";
-import { HideableHeaderDirective } from "./hideable-header.directive";
+import { HideableHeaderDirective } from './hideable-header.directive';
+import { HideableHeaderConfig, HIDEABLE_HEADER_CONFIG } from './hideable-header.models';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 @NgModule({
-  imports: [],
   declarations: [HideableHeaderDirective],
   exports: [HideableHeaderDirective]
 })
-export class HideableHeaderModule { }
+export class HideableHeaderModule {
+  static forRoot(config: HideableHeaderConfig): ModuleWithProviders {
+    return {
+      ngModule: HideableHeaderModule,
+      providers: [
+        {
+          provide: HIDEABLE_HEADER_CONFIG,
+          useValue: config
+        }
+      ]
+    };
+  }
+}
