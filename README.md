@@ -1,7 +1,11 @@
-# PhotoSwipe for Angular 2+ with Universal support
+# Hideable Header for Angular 2+ with Universal support
 
-This is a library with components and services for PhotoSwipe.
-The official PhotoSwipe JS file is still needed.
+This is a library with directive to easily make header hideable (or sticky).
+
+
+#Demo
+ 
+ https://ngx-hideable-header.firebaseapp.com
 
 ### Installation
 
