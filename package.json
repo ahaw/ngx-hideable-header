@@ -1,11 +1,11 @@
 {
-  "name": "ngx-hideable-header",
+  "name": "ngx-hideable-header-demo",
   "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "scripts": {
     "start": "ng serve",
-    "build:lib": "ng-packagr -p src/lib/ng-packagr.package.json",
+    "build:lib": "ng-packagr -p src/lib/package.json",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tslint": "tslint --project ./",
     "tslint:fix": "tslint --project ./ --fix",
@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^6.0.3",
     "@angular/platform-browser-dynamic": "^6.0.3",
     "core-js": "^2.4.1",
+    "ngx-hideable-header": "0.0.1",
     "zone.js": "^0.8.12"
   },
   "devDependencies": {
