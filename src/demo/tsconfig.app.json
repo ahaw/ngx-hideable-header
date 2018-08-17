@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "angularCompilerOptions": {
+    "paths": {
+      "@ngx-hideable-header": ["../lib/src/public_api.ts"],
+      "@ngx-hideable-header-builded": ["../../dist/ngx-hideableHeader"]
+    },
+    "disableTypeScriptVersionCheck": true
+  },
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "module": "es2015",
+    "baseUrl": "",
+    "types": [
+      "node"
+    ]
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

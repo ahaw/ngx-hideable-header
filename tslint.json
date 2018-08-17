@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "codelyzer",
+    "angular-tslint-rules",
+    "tslint-config-prettier",
+    "tslint-plugin-prettier"
+  ],
+  "rulesDirectory": [
+    "codelyzer",
+    "angular-tslint-rules",
+    "tslint-config-prettier",
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "prettier": true,
+    "member-access": [false, "no-public"],
+    "curly": false,
+    "no-empty": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ngx-hideable-header",
+  "version": "0.0.23",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahaw/ngx-hideable-header.git"
+  },
+  "author": "Arkadiusz Hnat",
+  "license": "MIT",
+  "private": true,
+  "peerdependencies": {
+    "@angular/common": "^6.1.3",
+    "@angular/core": "^6.1.3",
+    "@angular/compiler-cli": "^6.1.3",
+    "tslib": "^1.9.3"
+  },
+  "ngPackage": {
+    "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+    "workingDirectory": "../.ng_build",
+    "lib": {
+      "entryFile": "./public_api.ts"
+    },
+    "dest": "../../dist/ngx-hideable-header"
+  }
+}
