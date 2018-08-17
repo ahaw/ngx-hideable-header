@@ -3,9 +3,19 @@
 This is a library with directive to easily make header hideable (or sticky).
 
 
-###Demo
- 
+### Online demo
+
+``` 
  https://ngx-hideable-header.firebaseapp.com
+```
+
+### Local Demo
+
+For a demo just run:
+```
+npm install
+npm run start
+```
 
 ### Installation
 
@@ -43,10 +53,4 @@ export class AppModule {
 
 ```
 
-### Demo
 
-For a demo just run:
-```
-npm install
-npm run start
-```
