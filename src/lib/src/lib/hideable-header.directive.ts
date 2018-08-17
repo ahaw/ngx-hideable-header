@@ -46,7 +46,6 @@ export class HideableHeaderDirective {
   }
 
   private setStyle(operation: string, value: string) {
-    console.log(operation, value);
     this.render.setStyle(this.headerElement.nativeElement, operation, value);
   }
 }
