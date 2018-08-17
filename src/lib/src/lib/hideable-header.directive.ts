@@ -1,15 +1,9 @@
-import { Directive, ElementRef, HostListener, Inject, Input, isDevMode, OnInit, PLATFORM_ID, Renderer2, Optional } from '@angular/core';
+import { Directive, ElementRef, HostListener, Inject, Input, isDevMode, OnInit, PLATFORM_ID, Renderer2, Optional, HostBinding } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig } from './hideable-header.models';
 
 @Directive({
-  selector: '[hideableHeader]',
-  host: {
-    '[style.position]': '"fixed"',
-    '[style.top]': '"0"',
-    '[style.left]': '"0"',
-    '[style.transition]': '"all 0.5s"'
-  }
+  selector: '[hideableHeader]'
 })
 export class HideableHeaderDirective {
   private lastScrollTop = 0;
@@ -21,6 +15,11 @@ export class HideableHeaderDirective {
     @Inject(PLATFORM_ID) private platformId: string,
     @Inject(HIDEABLE_HEADER_CONFIG) private config: HideableHeaderConfig
   ) {}
+
+  @HostBinding('style.position') position: string = this.config.position || 'fixed';
+  @HostBinding('style.top') top: string = this.config.top || '0';
+  @HostBinding('style.left') left: string = this.config.left || '0';
+  @HostBinding('style.transition') transition: string = this.config.transition || 'all 0.5s';
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
