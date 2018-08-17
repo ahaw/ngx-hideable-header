@@ -31,7 +31,10 @@ import {HideableHeaderModule} from 'ngx-hideable-header';
   ...
   imports: [
     BrowserModule,
-    HideableHeaderModule
+    HideableHeaderModule.forRoot({
+      heightTransform: -80,
+      units: 'px'
+    })
   ]
   ...
 })
@@ -41,6 +44,9 @@ export class AppModule {
 ```
 
 ### Usage
+
+When importing use the `forRoot` method on the module and pass it the height of your header in and the units you
+want to use.  Units is optional and defaults to 'px'.
 
 ```js
   //add hideableHeader directive to object with optional 'hideOnScrollDown' parameter">

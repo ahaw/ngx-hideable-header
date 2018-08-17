@@ -2,11 +2,6 @@ import { Directive, ElementRef, HostListener, Inject, Input, isDevMode, OnInit, 
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig } from './hideable-header.models';
 
-const defaultTranslate = {
-  translateValue1: -80,
-  translateValue2: 0
-};
-
 @Directive({
   selector: '[hideableHeader]',
   host: {
@@ -24,9 +19,7 @@ export class HideableHeaderDirective {
     private headerElement: ElementRef,
     private render: Renderer2,
     @Inject(PLATFORM_ID) private platformId: string,
-    @Optional()
-    @Inject(HIDEABLE_HEADER_CONFIG)
-    private config: HideableHeaderConfig = defaultTranslate
+    @Inject(HIDEABLE_HEADER_CONFIG) private config: HideableHeaderConfig
   ) {}
 
   @HostListener('window:scroll', [])
@@ -44,11 +37,16 @@ export class HideableHeaderDirective {
 
     this.currentScrollTop = scrollTop;
     if (this.lastScrollTop > 0 && this.lastScrollTop < this.currentScrollTop && scrollTop > clientHeight + clientHeight) {
-      this.render.setStyle(this.headerElement.nativeElement, 'transform', `translateY(${this.config.translateValue1}px)`);
+      this.setStyle('transform', `translateY(${this.config.heightTransform}${this.config.units || 'px'})`);
     } else if (this.lastScrollTop > this.currentScrollTop && !(scrollTop <= clientHeight)) {
-      this.render.setStyle(this.headerElement.nativeElement, 'transform', `translateY(${this.config.translateValue2}px)`);
+      this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
     }
 
     this.lastScrollTop = this.currentScrollTop;
+  }
+
+  private setStyle(operation: string, value: string) {
+    console.log(operation, value);
+    this.render.setStyle(this.headerElement.nativeElement, operation, value);
   }
 }
