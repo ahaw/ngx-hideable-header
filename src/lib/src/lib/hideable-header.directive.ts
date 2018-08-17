@@ -24,8 +24,8 @@ export class HideableHeaderDirective {
     private headerElement: ElementRef,
     private render: Renderer2,
     @Inject(PLATFORM_ID) private platformId: string,
-    @Inject(HIDEABLE_HEADER_CONFIG)
     @Optional()
+    @Inject(HIDEABLE_HEADER_CONFIG)
     private config: HideableHeaderConfig = defaultTranslate
   ) {}
 

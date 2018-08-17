@@ -10,13 +10,7 @@ import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [HeaderComponent],
-  imports: [
-    BrowserModule,
-    HideableHeaderModule.forRoot({
-      translateValue1: -80,
-      translateValue2: 0
-    })
-  ],
+  imports: [BrowserModule, HideableHeaderModule.forRoot()],
   providers: [],
   bootstrap: [HeaderComponent]
 })
