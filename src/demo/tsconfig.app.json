@@ -3,7 +3,7 @@
   "angularCompilerOptions": {
     "paths": {
       "@ngx-hideable-header": ["../lib/src/public_api.ts"],
-      "@ngx-hideable-header-builded": ["../../dist/ngx-hideableHeader"]
+      "@ngx-hideable-header-builded": ["../../dist/ngx-hideable-header"]
     },
     "disableTypeScriptVersionCheck": true
   },
