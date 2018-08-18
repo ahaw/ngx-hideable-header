@@ -7,7 +7,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
   exports: [HideableHeaderDirective]
 })
 export class HideableHeaderModule {
-  static forRoot(config?: HideableHeaderConfig): ModuleWithProviders {
+  static withConfig(config: HideableHeaderConfig): ModuleWithProviders {
     return {
       ngModule: HideableHeaderModule,
       providers: [

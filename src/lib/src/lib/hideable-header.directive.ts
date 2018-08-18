@@ -1,5 +1,5 @@
-import { Directive, ElementRef, HostListener, Inject, Input, isDevMode, OnInit, PLATFORM_ID, Renderer2, Optional, HostBinding } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Directive, ElementRef, HostListener, Inject, Input, PLATFORM_ID, Renderer2, HostBinding } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig } from './hideable-header.models';
 
 @Directive({
@@ -8,7 +8,12 @@ import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig } from './hideable-header.
 export class HideableHeaderDirective {
   private lastScrollTop = 0;
   private currentScrollTop = 0;
-  @Input() private hideOnScrollDown = true;
+
+  /**
+   * Boolean value to disable the hidable header,
+   */
+  @Input() disable = false;
+
   constructor(
     private headerElement: ElementRef,
     private render: Renderer2,
@@ -23,11 +28,8 @@ export class HideableHeaderDirective {
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
 
-    if (!this.hideOnScrollDown) {
+    if (!isPlatformBrowser(this.platformId) || this.disable) {
       return;
     }
 
@@ -36,7 +38,7 @@ export class HideableHeaderDirective {
 
     this.currentScrollTop = scrollTop;
     if (this.lastScrollTop > 0 && this.lastScrollTop < this.currentScrollTop && scrollTop > clientHeight + clientHeight) {
-      this.setStyle('transform', `translateY(${this.config.heightTransform}${this.config.units || 'px'})`);
+      this.setStyle('transform', `translateY(${this.config.height}${this.config.units || 'px'})`);
     } else if (this.lastScrollTop > this.currentScrollTop && !(scrollTop <= clientHeight)) {
       this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
     }

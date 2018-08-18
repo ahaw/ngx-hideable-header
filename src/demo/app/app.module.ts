@@ -12,8 +12,8 @@ import { HeaderComponent } from './header/header.component';
   declarations: [HeaderComponent],
   imports: [
     BrowserModule,
-    HideableHeaderModule.forRoot({
-      heightTransform: -80
+    HideableHeaderModule.withConfig({
+      height: -80
     })
   ],
   providers: [],
