@@ -1,58 +1,90 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Inject,
-  Input,
-  isDevMode,
-  OnInit,
-  PLATFORM_ID,
-  Renderer2
-} from "@angular/core";
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
-
+import { Directive, ElementRef, HostListener, Inject, Input, PLATFORM_ID, Renderer2, HostBinding } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig, ViewProperties } from './hideable-header.models';
 
 @Directive({
-  selector: "[hideableHeader]",
-  host: {
-    '[style.position]': '"fixed"',
-    '[style.top]': '"0"',
-    '[style.left]': '"0"',
-    '[style.transition]': '"all 0.5s"'
-  }
+  selector: '[hideableHeader]'
 })
-export class HideableHeaderDirective implements OnInit {
+export class HideableHeaderDirective {
+  private lastScrollTop = 0;
 
-  private c = 0;
-  private currentScrollTop = 0;
-  @Input("hideOnScrollDown")
-  private hideOnScrollDown: boolean = true;
-  constructor(private headerElement: ElementRef, private render: Renderer2, @Inject(PLATFORM_ID) private platformId: string) {
-  }
+  /**
+   * Boolean value to disable the hidable header,
+   */
+  @Input()
+  disable = false;
 
-  @HostListener("window:scroll", [])
+  constructor(
+    private headerElement: ElementRef,
+    private render: Renderer2,
+    @Inject(PLATFORM_ID) private platformId: string,
+    @Inject(HIDEABLE_HEADER_CONFIG) private config: HideableHeaderConfig
+  ) {}
+
+  @HostBinding('style.position')
+  position: string = this.config.position || 'fixed';
+  @HostBinding('style.top')
+  top: string = this.config.top || '0';
+  @HostBinding('style.left')
+  left: string = this.config.left || '0';
+  @HostBinding('style.transition')
+  transition: string = this.config.transition || 'all 0.5s';
+
+  @HostListener('window:scroll', [])
   onWindowScroll(): void {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!isPlatformBrowser(this.platformId) || this.disable) {
       return;
     }
-
-    if (!this.hideOnScrollDown) {
-      return;
-    }
-
-    const a = window.document.scrollingElement.scrollTop;
-    const b = this.headerElement.nativeElement.clientHeight;
-
-    this.currentScrollTop = a;
-    if (this.c > 0 && this.c < this.currentScrollTop && a > b + b) {
-      this.render.setStyle(this.headerElement.nativeElement, "transform", "translateY(-80px)")
-    } else if (this.c > this.currentScrollTop && !(a <= b)) {
-      this.render.setStyle(this.headerElement.nativeElement, "transform", "translateY(0px)")
-    }
-
-    this.c = this.currentScrollTop;
+    this.onScroll(this.viewProperties);
   }
 
-  ngOnInit(): void {
+  /**
+   * Properties required to calculate if the element shows or hides
+   */
+  get viewProperties(): ViewProperties {
+    return {
+      scrollTop: window.document.scrollingElement.scrollTop,
+      lastScrollTop: this.lastScrollTop,
+      clientHeight: this.headerElement.nativeElement.clientHeight
+    };
+  }
+
+  /**
+   * Shows the element
+   */
+  public show() {
+    this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
+  }
+
+  /**
+   * Hides the element
+   */
+  public hide() {
+    this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
+  }
+
+  /**
+   * Calculates if an element should be hidden
+   */
+  private hideElement = (viewProps: ViewProperties): boolean =>
+    viewProps.lastScrollTop > 0 && viewProps.lastScrollTop < viewProps.scrollTop && viewProps.scrollTop > viewProps.clientHeight + viewProps.clientHeight;
+
+  /**
+   * Calculates if an element should be shown
+   */
+  private showElement = (viewProps: ViewProperties): boolean =>
+    viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
+
+  private onScroll(viewProps: ViewProperties) {
+    if (this.hideElement(viewProps)) {
+      this.hide();
+    } else if (this.showElement(viewProps)) {
+      this.show();
+    }
+    this.lastScrollTop = viewProps.scrollTop;
+  }
+
+  private setStyle(operation: string, value: string) {
+    this.render.setStyle(this.headerElement.nativeElement, operation, value);
   }
 }
