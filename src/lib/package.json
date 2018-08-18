@@ -1,6 +1,6 @@
 {
   "name": "ngx-hideable-header",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahaw/ngx-hideable-header.git"
@@ -9,7 +9,7 @@
   "license": "LICENSE",
   "author": "Arkadiusz Hnat",
   "contributors": [{
-    "name": "Tane Piper" ,
+    "name": "Tane Piper",
     "email": "piper.tane@gmail.com",
     "url": "https://github.com/tanepiper"
   }],
