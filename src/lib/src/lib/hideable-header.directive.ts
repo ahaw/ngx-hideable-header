@@ -1,18 +1,18 @@
 import { Directive, ElementRef, HostListener, Inject, Input, PLATFORM_ID, Renderer2, HostBinding } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig } from './hideable-header.models';
+import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig, ViewProperties } from './hideable-header.models';
 
 @Directive({
   selector: '[hideableHeader]'
 })
 export class HideableHeaderDirective {
   private lastScrollTop = 0;
-  private currentScrollTop = 0;
 
   /**
    * Boolean value to disable the hidable header,
    */
-  @Input() disable = false;
+  @Input()
+  disable = false;
 
   constructor(
     private headerElement: ElementRef,
@@ -21,29 +21,47 @@ export class HideableHeaderDirective {
     @Inject(HIDEABLE_HEADER_CONFIG) private config: HideableHeaderConfig
   ) {}
 
-  @HostBinding('style.position') position: string = this.config.position || 'fixed';
-  @HostBinding('style.top') top: string = this.config.top || '0';
-  @HostBinding('style.left') left: string = this.config.left || '0';
-  @HostBinding('style.transition') transition: string = this.config.transition || 'all 0.5s';
+  @HostBinding('style.position')
+  position: string = this.config.position || 'fixed';
+  @HostBinding('style.top')
+  top: string = this.config.top || '0';
+  @HostBinding('style.left')
+  left: string = this.config.left || '0';
+  @HostBinding('style.transition')
+  transition: string = this.config.transition || 'all 0.5s';
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
-
     if (!isPlatformBrowser(this.platformId) || this.disable) {
       return;
     }
+    this.onScroll(this.getViewProperties());
+  }
 
-    const scrollTop = window.document.scrollingElement.scrollTop;
-    const clientHeight = this.headerElement.nativeElement.clientHeight;
+  /**
+   * Returns the view properties required to calculate if the elements shows or hides
+   */
+  private getViewProperties = (): ViewProperties => ({
+    scrollTop: window.document.scrollingElement.scrollTop,
+    clientHeight: this.headerElement.nativeElement.clientHeight
+  });
 
-    this.currentScrollTop = scrollTop;
-    if (this.lastScrollTop > 0 && this.lastScrollTop < this.currentScrollTop && scrollTop > clientHeight + clientHeight) {
-      this.setStyle('transform', `translateY(${this.config.height}${this.config.units || 'px'})`);
-    } else if (this.lastScrollTop > this.currentScrollTop && !(scrollTop <= clientHeight)) {
+  /**
+   * Calculates if the header
+   */
+  private hideElement = (currentScrollTop: number, lastScrollTop: number, clientHeight: number): boolean =>
+    lastScrollTop > 0 && lastScrollTop < currentScrollTop && currentScrollTop > clientHeight + clientHeight;
+
+  private showElement = (currentScrollTop: number, lastScrollTop: number, clientHeight: number): boolean =>
+    lastScrollTop > currentScrollTop && !(currentScrollTop <= clientHeight);
+
+  private onScroll(viewProps: ViewProperties) {
+    if (this.hideElement(viewProps.scrollTop, this.lastScrollTop, viewProps.clientHeight)) {
+      this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
+    } else if (this.showElement(viewProps.scrollTop, this.lastScrollTop, viewProps.clientHeight)) {
       this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
     }
-
-    this.lastScrollTop = this.currentScrollTop;
+    this.lastScrollTop = viewProps.scrollTop;
   }
 
   private setStyle(operation: string, value: string) {

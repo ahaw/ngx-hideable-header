@@ -1,7 +1,6 @@
 # Hideable Header for Angular 2+ with Universal support
 
-This is a library with directive to easily make header hideable (or sticky).
-
+This directive makes it easy to have website headers that are hidable when the user passes a certain height on the screen.
 
 ### Online demo
 
@@ -25,14 +24,15 @@ npm install --save ngx-hideable-header
 
 Include the HideableHeaderModule.
 ```js
-import {HideableHeaderModule} from 'ngx-hideable-header';
+import { HideableHeaderModule } from 'ngx-hideable-header';
 
 @NgModule({
   ...
   imports: [
     BrowserModule,
     HideableHeaderModule.forRoot({
-      heightTransform: -80,
+      height: 80,
+      // The rest of these are optional
       units: 'px',
       position: 'fixed',
       top: '0',
@@ -49,18 +49,16 @@ export class AppModule {
 
 ### Usage
 
-When importing use the `forRoot` method on the module and pass it the height of your header in and the units you
-want to use, as well as positional css.  The only value required is the `heightTransform` and the default units value is `px`.
+When importing use the `forRoot` method in your app module and pass it the height of your header in and the units you
+want to use, as well as positional css.  The only value required is the `height` and the default units value is pixels.
 
-```js
-  //add hideableHeader directive to object with optional 'hideOnScrollDown' parameter">
-   <div class="container">
-    <nav hideableHeader [hideOnScrollDown]=true>
-        <a href="#" id="brand">Brand</a>
-    </nav>
+```html
+//disable the directive via the 'disable' parameter">
+<div class="container">
+  <nav hideableHeader [disable]=true>
+    <a href="#" id="brand">Brand</a>
+  </nav>
 </div>
-</div>
-
 ```
 
 

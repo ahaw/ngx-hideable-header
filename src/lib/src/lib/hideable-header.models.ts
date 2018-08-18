@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
 /**
  * Configuration optins for the header. The only required
@@ -36,6 +36,11 @@ export interface HideableHeaderConfig {
    * The transition style for the header, default is 'all 0.5s'
    */
   transition?: string;
+}
+
+export interface ViewProperties {
+  scrollTop: number;
+  clientHeight: number;
 }
 
 /**
