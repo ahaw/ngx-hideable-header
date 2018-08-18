@@ -40,6 +40,7 @@ export interface HideableHeaderConfig {
 
 export interface ViewProperties {
   scrollTop: number;
+  lastScrollTop: number;
   clientHeight: number;
 }
 

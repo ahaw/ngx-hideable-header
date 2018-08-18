@@ -44,6 +44,7 @@ export class HideableHeaderDirective {
   get viewProperties(): ViewProperties {
     return {
       scrollTop: window.document.scrollingElement.scrollTop,
+      lastScrollTop: this.lastScrollTop,
       clientHeight: this.headerElement.nativeElement.clientHeight
     };
   }
@@ -66,12 +67,13 @@ export class HideableHeaderDirective {
    * Calculates if an element should be hidden
    */
   private hideElement = (viewProps: ViewProperties): boolean =>
-    this.lastScrollTop > 0 && this.lastScrollTop < viewProps.scrollTop && viewProps.scrollTop > viewProps.clientHeight + viewProps.clientHeight;
+    viewProps.lastScrollTop > 0 && viewProps.lastScrollTop < viewProps.scrollTop && viewProps.scrollTop > viewProps.clientHeight + viewProps.clientHeight;
 
   /**
    * Calculates if an element should be shown
    */
-  private showElement = (viewProps: ViewProperties): boolean => this.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
+  private showElement = (viewProps: ViewProperties): boolean =>
+    viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
 
   private onScroll(viewProps: ViewProperties) {
     if (this.hideElement(viewProps)) {
