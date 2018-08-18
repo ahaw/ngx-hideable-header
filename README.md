@@ -61,4 +61,10 @@ want to use, as well as positional css.  The only value required is the `height`
 </div>
 ```
 
+### Public API
 
+The directive instance has two methods and some properties that can be viewed:
+
+- `instance.hide()` - Hides the element the directive is bound to.
+- `instance.show()` - Shows the element the directive is bound to.
+- `instance.viewProperties` - An object containing properties used in the directive
