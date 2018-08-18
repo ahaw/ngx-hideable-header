@@ -49,6 +49,20 @@ export class HideableHeaderDirective {
   }
 
   /**
+   * Shows the element
+   */
+  public show() {
+    this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
+  }
+
+  /**
+   * Hides the element
+   */
+  public hide() {
+    this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
+  }
+
+  /**
    * Calculates if an element should be hidden
    */
   private hideElement = (viewProps: ViewProperties): boolean =>
@@ -57,14 +71,13 @@ export class HideableHeaderDirective {
   /**
    * Calculates if an element should be shown
    */
-  private showElement = (viewProps: ViewProperties): boolean =>
-    this.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
+  private showElement = (viewProps: ViewProperties): boolean => this.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
 
   private onScroll(viewProps: ViewProperties) {
     if (this.hideElement(viewProps)) {
-      this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
+      this.hide();
     } else if (this.showElement(viewProps)) {
-      this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
+      this.show();
     }
     this.lastScrollTop = viewProps.scrollTop;
   }
