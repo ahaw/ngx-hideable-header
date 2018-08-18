@@ -35,30 +35,35 @@ export class HideableHeaderDirective {
     if (!isPlatformBrowser(this.platformId) || this.disable) {
       return;
     }
-    this.onScroll(this.getViewProperties());
+    this.onScroll(this.viewProperties);
   }
 
   /**
-   * Returns the view properties required to calculate if the elements shows or hides
+   * Properties required to calculate if the element shows or hides
    */
-  private getViewProperties = (): ViewProperties => ({
-    scrollTop: window.document.scrollingElement.scrollTop,
-    clientHeight: this.headerElement.nativeElement.clientHeight
-  });
+  get viewProperties(): ViewProperties {
+    return {
+      scrollTop: window.document.scrollingElement.scrollTop,
+      clientHeight: this.headerElement.nativeElement.clientHeight
+    };
+  }
 
   /**
-   * Calculates if the header
+   * Calculates if an element should be hidden
    */
-  private hideElement = (currentScrollTop: number, lastScrollTop: number, clientHeight: number): boolean =>
-    lastScrollTop > 0 && lastScrollTop < currentScrollTop && currentScrollTop > clientHeight + clientHeight;
+  private hideElement = (viewProps: ViewProperties): boolean =>
+    this.lastScrollTop > 0 && this.lastScrollTop < viewProps.scrollTop && viewProps.scrollTop > viewProps.clientHeight + viewProps.clientHeight;
 
-  private showElement = (currentScrollTop: number, lastScrollTop: number, clientHeight: number): boolean =>
-    lastScrollTop > currentScrollTop && !(currentScrollTop <= clientHeight);
+  /**
+   * Calculates if an element should be shown
+   */
+  private showElement = (viewProps: ViewProperties): boolean =>
+    this.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
 
   private onScroll(viewProps: ViewProperties) {
-    if (this.hideElement(viewProps.scrollTop, this.lastScrollTop, viewProps.clientHeight)) {
+    if (this.hideElement(viewProps)) {
       this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
-    } else if (this.showElement(viewProps.scrollTop, this.lastScrollTop, viewProps.clientHeight)) {
+    } else if (this.showElement(viewProps)) {
       this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
     }
     this.lastScrollTop = viewProps.scrollTop;
