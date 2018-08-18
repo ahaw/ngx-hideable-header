@@ -8,6 +8,11 @@
   "readme": "README",
   "license": "LICENSE",
   "author": "Arkadiusz Hnat",
+  "contributors": [{
+    "name": "Tane Piper" ,
+    "email": "piper.tane@gmail.com",
+    "url": "https://github.com/tanepiper"
+  }],
   "private": true,
   "peerdependencies": {
     "@angular/common": "^6.1.3",
