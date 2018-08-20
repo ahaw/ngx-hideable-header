@@ -14,7 +14,6 @@ import { HeaderComponent } from './header/header.component';
     BrowserModule,
     HideableHeaderModule.forRoot({
       height: 80,
-      transition: 'all 1s ease-out'
     })
   ],
   providers: [],
