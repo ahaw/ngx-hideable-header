@@ -74,6 +74,15 @@
 
       <span>Header Hidden?: {{this.hidableElement.isHidden | async}}</span>
     </p>
+    <p>
+      <label for="selectTransition">Change Transition:</label>
+      <select id="selectTransition" #transitionStyle (change)="switchTransition(transitionStyle.value)">
+        <option value="all 0.5s">all 0.5s</option>
+        <option value="all 1s ease-in">all 1s ease-in</option>
+        <option value="all 1s ease-out">all 1s ease-out</option>
+        <option value="all 1.5s ease-in-out">all 1.5s ease-in-out</option>
+      </select>
+    </p>
     <button (click)="hide()">Hide Header</button>
     <button (click)="show()">Show Header</button>
   </div>

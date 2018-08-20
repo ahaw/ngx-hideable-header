@@ -19,4 +19,8 @@ export class HeaderComponent {
   show() {
     this.hidableElement.show();
   }
+
+  switchTransition(transition: string) {
+    this.hidableElement.transition = transition;
+  }
 }
