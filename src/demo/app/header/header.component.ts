@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { HideableHeaderDirective } from '../../../lib/public_api';
 
 @Component({
   selector: 'ngx-root',
@@ -8,4 +9,14 @@ import { Component, OnInit } from '@angular/core';
 export class HeaderComponent {
   disable: boolean = false;
   reverse: boolean = false;
+
+  @ViewChild(HideableHeaderDirective) hidableElement: HideableHeaderDirective;
+
+  hide() {
+    this.hidableElement.hide();
+  }
+
+  show() {
+    this.hidableElement.show();
+  }
 }

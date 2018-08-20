@@ -1,6 +1,7 @@
 import { Directive, ElementRef, HostListener, Inject, Input, PLATFORM_ID, Renderer2, HostBinding } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig, ViewProperties } from './hideable-header.models';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Directive({
   selector: '[hideableHeader]'
@@ -16,6 +17,10 @@ export class HideableHeaderDirective {
 
   @Input()
   reverse = false;
+
+  private elementIsHidden = new BehaviorSubject<boolean>(false);
+
+  private currentViewProperties = new BehaviorSubject<ViewProperties>(this.getViewProperties());
 
   constructor(
     private headerElement: ElementRef,
@@ -38,18 +43,18 @@ export class HideableHeaderDirective {
     if (!isPlatformBrowser(this.platformId) || this.disable) {
       return;
     }
-    this.onScroll(this.viewProperties);
+    this.onScroll(this.getViewProperties());
   }
 
   /**
    * Properties required to calculate if the element shows or hides
    */
-  get viewProperties(): ViewProperties {
-    return {
-      scrollTop: window.document.scrollingElement.scrollTop,
-      lastScrollTop: this.lastScrollTop,
-      clientHeight: this.headerElement.nativeElement.clientHeight
-    };
+  get viewProperties(): Observable<ViewProperties> {
+    return this.currentViewProperties.asObservable();
+  }
+
+  get isHidden(): Observable<boolean> {
+    return this.elementIsHidden.asObservable();
   }
 
   /**
@@ -57,6 +62,7 @@ export class HideableHeaderDirective {
    */
   public show() {
     this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
+    this.elementIsHidden.next(false);
   }
 
   /**
@@ -64,6 +70,15 @@ export class HideableHeaderDirective {
    */
   public hide() {
     this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
+    this.elementIsHidden.next(true);
+  }
+
+  private getViewProperties(): ViewProperties {
+    return {
+      scrollTop: window.document.scrollingElement.scrollTop,
+      lastScrollTop: this.lastScrollTop,
+      clientHeight: this.headerElement.nativeElement.clientHeight
+    };
   }
 
   /**
@@ -79,9 +94,10 @@ export class HideableHeaderDirective {
     viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
 
   private onScroll(viewProps: ViewProperties) {
-    if (!this.reverse && this.hideElement(viewProps) || this.reverse && this.showElement(viewProps)) {
+    this.currentViewProperties.next(viewProps);
+    if ((!this.reverse && this.hideElement(viewProps)) || (this.reverse && this.showElement(viewProps))) {
       this.hide();
-    } else if (!this.reverse && this.showElement(viewProps) || this.reverse && this.hideElement(viewProps)) {
+    } else if ((!this.reverse && this.showElement(viewProps)) || (this.reverse && this.hideElement(viewProps))) {
       this.show();
     }
     this.lastScrollTop = viewProps.scrollTop;
