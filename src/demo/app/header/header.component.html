@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top"
   hideableHeader
-  [disable]=disable
-  [reverse]=reverse>
+  [disable]=disable.value
+  [reverse]=reverse.value>
   <a class="navbar-brand"
     href="#">Navbar</a>
   <button class="navbar-toggler"
@@ -64,9 +64,9 @@
   <div class="starter-template">
     <h1>Hidable Header Options and Methods</h1>
     <p class="lead">
-      <input (change)="disable = !disable"
+      <input (change)="disable.next(!disable.value)"
         type="checkbox"> Disable Hiding?
-      <input (change)="reverse = !reverse"
+      <input (change)="reverse.next(!reverse.value)"
         type="checkbox"> Reverse?
     </p>
     <p>
@@ -76,7 +76,9 @@
     </p>
     <p>
       <label for="selectTransition">Change Transition:</label>
-      <select id="selectTransition" #transitionStyle (change)="switchTransition(transitionStyle.value)">
+      <select id="selectTransition"
+        #transitionStyle
+        (change)="switchTransition(transitionStyle.value)">
         <option value="all 0.5s">all 0.5s</option>
         <option value="all 1s ease-in">all 1s ease-in</option>
         <option value="all 1s ease-out">all 1s ease-out</option>
