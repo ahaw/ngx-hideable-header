@@ -14,6 +14,9 @@ export class HideableHeaderDirective {
   @Input()
   disable = false;
 
+  @Input()
+  reverse = false;
+
   constructor(
     private headerElement: ElementRef,
     private render: Renderer2,
@@ -76,9 +79,9 @@ export class HideableHeaderDirective {
     viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
 
   private onScroll(viewProps: ViewProperties) {
-    if (this.hideElement(viewProps)) {
+    if (!this.reverse && this.hideElement(viewProps) || this.reverse && this.showElement(viewProps)) {
       this.hide();
-    } else if (this.showElement(viewProps)) {
+    } else if (!this.reverse && this.showElement(viewProps) || this.reverse && this.hideElement(viewProps)) {
       this.show();
     }
     this.lastScrollTop = viewProps.scrollTop;

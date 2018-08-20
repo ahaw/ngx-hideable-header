@@ -6,5 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  public disable: boolean = false;
+  disable: boolean = false;
+  reverse: boolean = false;
 }

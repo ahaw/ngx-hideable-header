@@ -1,8 +1,9 @@
 <div class="container">
-    <nav hideableHeader [disable]=disable>
+    <nav hideableHeader [disable]=disable [reverse]=reverse>
         <a href="#" id="brand">Brand</a>
     </nav>
     <div class="content">
         <input (change)="disable = !disable" type="checkbox"> Disable Hiding?
+        <input (change)="reverse = !reverse" type="checkbox"> Reverse?
     </div>
 </div>
