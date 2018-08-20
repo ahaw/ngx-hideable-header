@@ -12,12 +12,12 @@ export class HideableHeaderModule {
   /**
    * Call HideableHeaderModule.forRoot on your app.module. Any other modules that
    * use this can just import HideableHeaderModule.
-   * 
+   *
    * The configuration has one required parameter, `height`, which is the height of
    * the element you attach the directive to. You can also provide styling options
    * see {@link HideableHeaderConfig}
    */
-  static forRoot(config: HideableHeaderConfig): ModuleWithProviders {
+  static forRoot(config?: HideableHeaderConfig): ModuleWithProviders {
     return {
       ngModule: HideableHeaderModule,
       providers: [
