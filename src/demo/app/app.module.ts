@@ -12,9 +12,7 @@ import { HeaderComponent } from './header/header.component';
   declarations: [HeaderComponent],
   imports: [
     BrowserModule,
-    HideableHeaderModule.forRoot({
-      height: 80,
-    })
+    HideableHeaderModule.forRoot({})
   ],
   providers: [],
   bootstrap: [HeaderComponent]

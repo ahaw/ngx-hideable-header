@@ -20,7 +20,8 @@ The HideableHeaderModule provides a single `forRoot` configuration to add to an 
 several options to make sure the directive is set to handle the correct size of header. When you want to include the directive in any feature
 modules of your application you only have to import the `HideableHeaderModule` module
 
-The only required value is `height` and this should match the height of the element CSS value. The default units for this value is pixels (`px`).
+By default the direcitve will detect the height of the element it is bound to and use this as the transition height.  If you want to overide
+this then you can pass the height value.  The default units for this value is pixels (`px`).
 
 ```typescript
 import { HideableHeaderModule } from 'ngx-hideable-header';
@@ -31,7 +32,6 @@ import { HideableHeaderModule } from 'ngx-hideable-header';
     BrowserModule,
     HideableHeaderModule.forRoot({
       height: 80,
-      // The rest of these are optional
       units: 'px',
       position: 'fixed',
       top: '0',

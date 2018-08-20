@@ -69,7 +69,7 @@ export class HideableHeaderDirective {
    * Hides the element
    */
   public hide() {
-    this.setStyle('transform', `translateY(-${this.config.height}${this.config.units || 'px'})`);
+    this.setStyle('transform', `translateY(-${this.getViewProperties().transitionHeight}${this.config.units || 'px'})`);
     this.elementIsHidden.next(true);
   }
 
@@ -77,7 +77,7 @@ export class HideableHeaderDirective {
     return {
       scrollTop: window.document.scrollingElement.scrollTop,
       lastScrollTop: this.lastScrollTop,
-      clientHeight: this.headerElement.nativeElement.clientHeight
+      transitionHeight: this.config.height ? this.config.height : this.headerElement.nativeElement.clientHeight
     };
   }
 
@@ -85,13 +85,15 @@ export class HideableHeaderDirective {
    * Calculates if an element should be hidden
    */
   private hideElement = (viewProps: ViewProperties): boolean =>
-    viewProps.lastScrollTop > 0 && viewProps.lastScrollTop < viewProps.scrollTop && viewProps.scrollTop > viewProps.clientHeight + viewProps.clientHeight;
+    viewProps.lastScrollTop > 0 &&
+    viewProps.lastScrollTop < viewProps.scrollTop &&
+    viewProps.scrollTop > viewProps.transitionHeight + viewProps.transitionHeight;
 
   /**
    * Calculates if an element should be shown
    */
   private showElement = (viewProps: ViewProperties): boolean =>
-    viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.clientHeight);
+    viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.transitionHeight);
 
   private onScroll(viewProps: ViewProperties) {
     this.currentViewProperties.next(viewProps);

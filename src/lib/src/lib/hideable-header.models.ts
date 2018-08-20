@@ -7,10 +7,9 @@ import { InjectionToken } from '@angular/core';
 export interface HideableHeaderConfig {
 
   /**
-   * The value of the height to transform the header by, this
-   * should match the fixed height of the header
+   * The value of the height to transform the header by. Default value is the height of the header in the DOM
    */
-  height: number;
+  height?: number;
 
   /**
    * The type of style units to use. The default is 'px'
@@ -38,10 +37,24 @@ export interface HideableHeaderConfig {
   transition?: string;
 }
 
+/**
+ * The view properties of the Hideable Header
+ */
 export interface ViewProperties {
+  /**
+   * The current scroll top value
+   */
   scrollTop: number;
+
+  /**
+   * The last scroll top value
+   */
   lastScrollTop: number;
-  clientHeight: number;
+
+  /**
+   * The height of the transition based on the height of the DOM element, or configuration option
+   */
+  transitionHeight: number;
 }
 
 /**
