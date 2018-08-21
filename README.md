@@ -1,61 +1,55 @@
 # Hideable Header for Angular 2+ with Universal support
 
-This directive makes it easy to have website headers that are hidable when the user passes a certain height on the screen.
+Hideable Header is a directive for Angular that provides and easy and convenient API to add to any header element giving you full control
+to show and hide it.
 
-### Online demo
-
-``` 
- https://ngx-hideable-header.firebaseapp.com
-```
-
-### Local Demo
-
-For a demo just run:
-```
-npm install
-npm run start
-```
+The default behaviour is that the element will hide once you have scrolled passed a distance equal to the height of your header. Scrolling up
+the header will reappear.  You can also reverse this functionality and have headers be default by hidden and visible on scroll (useful for utility bars)
 
 ### Installation
 
+Add the NPM package to your project
+
 ```
-npm install --save ngx-hideable-header
+npm install ngx-hideable-header
 ```
 
-Include the HideableHeaderModule.
-```js
+## Usage
+
+The HideableHeaderModule should be imported into any module you want to use it in. This will provide the `hideableHeader` directive to use in your components.
+
+```typescript
 import { HideableHeaderModule } from 'ngx-hideable-header';
 
 @NgModule({
   ...
   imports: [
     BrowserModule,
-    HideableHeaderModule.forRoot({
-      height: 80,
-      // The rest of these are optional
-      units: 'px',
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      transition: 'all 0.5s'
-    })
+    HideableHeaderModule,
   ]
   ...
 })
-export class AppModule {
-  ...
-}
+export class AppModule {}
 ```
 
-### Usage
+### Directive Use
 
-When importing use the `forRoot` method in your app module and pass it the height of your header in and the units you
-want to use, as well as positional css.  The only value required is the `height` and the default units value is pixels.
+Attach the directive to any header component you want to be hidable. The directive has two configuration attributes - `disable` and `reverse`.
+
+- `[disable]=false`: This property stops the default behaviour of the directive.
+- `[reverse]=false`: This property will reverse when the show/hide triggers, useful for things you would like to appear after the user scrolls.
+
+You can also bind any style properties, but there are 4 default values set when using the directive.  These are applied to the element you attach this
+to:
+
+- `[style.position]="fixed"`
+- `[style.top]="0"`
+- `[style.left]="0"`
+- `[style.transition]="all 0.5s"`
 
 ```html
-//disable the directive via the 'disable' parameter">
 <div class="container">
-  <nav hideableHeader [disable]=true>
+  <nav hideableHeader [disable]=true [reverse]=false [style.transition]="all 1s ease-out">
     <a href="#" id="brand">Brand</a>
   </nav>
 </div>
@@ -63,8 +57,23 @@ want to use, as well as positional css.  The only value required is the `height`
 
 ### Public API
 
-The directive instance has two methods and some properties that can be viewed:
+The directive instance has two methods that can be called, and two `Observable` properties that can be subscribed to:
 
+#### Methods
 - `instance.hide()` - Hides the element the directive is bound to.
 - `instance.show()` - Shows the element the directive is bound to.
+
+### Subscriptions
 - `instance.viewProperties` - An object containing properties used in the directive
+- `instance.isHidden` - A boolean value available to show what state the attached element is in.
+
+To see how you use these in your code, check out the demo application and how to use `ViewChild` in your components.
+
+## Demos
+
+To see an online demo, visit https://ngx-hideable-header.firebaseapp.com. You can also run a local demo by cloning this repo and typing the following;
+
+```bash
+> npm install
+> npm run start
+```

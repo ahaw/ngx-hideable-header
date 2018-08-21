@@ -2,5 +2,5 @@
  * Public API Surface of ngx-hideable-header
  */
 
-export * from "./src/lib/hideable-header.directive";
-export * from "./src/lib/hideable-header.module";
+export { HideableHeaderDirective, HideableHeaderProperties } from './src/lib/hideable-header.directive';
+export { HideableHeaderModule } from './src/lib/hideable-header.module';
