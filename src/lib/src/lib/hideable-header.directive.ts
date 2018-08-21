@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 /**
  * View Properties of the directive
  */
-export interface ViewProperties {
+export interface HideableHeaderProperties {
   /**
    * Current scroll top value
    */
@@ -53,7 +53,7 @@ export class HideableHeaderDirective {
 
   private elementIsHidden = new BehaviorSubject<boolean>(false);
 
-  private currentViewProperties = new BehaviorSubject<ViewProperties>(this.getViewProperties());
+  private currentViewProperties = new BehaviorSubject<HideableHeaderProperties>(this.getViewProperties());
 
   constructor(
     private headerElement: ElementRef,
@@ -81,7 +81,7 @@ export class HideableHeaderDirective {
   /**
    * Properties required to calculate if the element shows or hides
    */
-  get viewProperties(): Observable<ViewProperties> {
+  get viewProperties(): Observable<HideableHeaderProperties> {
     return this.currentViewProperties.asObservable();
   }
 
@@ -105,7 +105,7 @@ export class HideableHeaderDirective {
     this.elementIsHidden.next(true);
   }
 
-  private getViewProperties(): ViewProperties {
+  private getViewProperties(): HideableHeaderProperties {
     return {
       scrollTop: window.document.scrollingElement.scrollTop,
       lastScrollTop: this.lastScrollTop,
@@ -116,7 +116,7 @@ export class HideableHeaderDirective {
   /**
    * Calculates if an element should be hidden
    */
-  private hideElement = (viewProps: ViewProperties): boolean =>
+  private hideElement = (viewProps: HideableHeaderProperties): boolean =>
     viewProps.lastScrollTop > 0 &&
     viewProps.lastScrollTop < viewProps.scrollTop &&
     viewProps.scrollTop > viewProps.transitionHeight + viewProps.transitionHeight;
@@ -124,10 +124,10 @@ export class HideableHeaderDirective {
   /**
    * Calculates if an element should be shown
    */
-  private showElement = (viewProps: ViewProperties): boolean =>
+  private showElement = (viewProps: HideableHeaderProperties): boolean =>
     viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.transitionHeight);
 
-  private onScroll(viewProps: ViewProperties) {
+  private onScroll(viewProps: HideableHeaderProperties) {
     this.currentViewProperties.next(viewProps);
     if ((!this.reverse && this.hideElement(viewProps)) || (this.reverse && this.showElement(viewProps))) {
       this.hide();
