@@ -1,7 +1,24 @@
 import { Directive, ElementRef, HostListener, Inject, Input, PLATFORM_ID, Renderer2, HostBinding } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HIDEABLE_HEADER_CONFIG, HideableHeaderConfig, ViewProperties } from './hideable-header.models';
 import { BehaviorSubject, Observable } from 'rxjs';
+
+/**
+ * View Properties of the directive
+ */
+export interface ViewProperties {
+  /**
+   * Current scroll top value
+   */
+  scrollTop: number;
+  /**
+   * Last scroll top value
+   */
+  lastScrollTop: number;
+  /**
+   * The height to transition the header animation by
+   */
+  transitionHeight: number;
+}
 
 @Directive({
   selector: '[hideableHeader]'
@@ -10,11 +27,27 @@ export class HideableHeaderDirective {
   private lastScrollTop = 0;
 
   /**
-   * Boolean value to disable the hidable header,
+   * Height to transition the element by. Default is the `clientHeight` of the element.
+   */
+  @Input()
+  height = this.headerElement.nativeElement.clientHeight;
+
+  /**
+   * The type of CSS unit to transition with, default is 'px' (pixels)
+   */
+  @Input()
+  units = 'px';
+
+  /**
+   * Disable the functionality of the directive.
    */
   @Input()
   disable = false;
 
+  /**
+   * Instead of hiding the header on scroll, this will make the header appear on scroll from a hidden position.
+   * Useful for utility bars.
+   */
   @Input()
   reverse = false;
 
@@ -26,17 +59,16 @@ export class HideableHeaderDirective {
     private headerElement: ElementRef,
     private render: Renderer2,
     @Inject(PLATFORM_ID) private platformId: string,
-    @Inject(HIDEABLE_HEADER_CONFIG) private config: HideableHeaderConfig = {}
   ) {}
 
   @HostBinding('style.position')
-  position: string = this.config.position || 'fixed';
+  position = 'fixed';
   @HostBinding('style.top')
-  top: string = this.config.top || '0';
+  top = '0';
   @HostBinding('style.left')
-  left: string = this.config.left || '0';
+  left = '0';
   @HostBinding('style.transition')
-  transition: string = this.config.transition || 'all 0.5s';
+  transition = 'all 0.5s';
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
@@ -61,7 +93,7 @@ export class HideableHeaderDirective {
    * Shows the element
    */
   public show() {
-    this.setStyle('transform', `translateY(0${this.config.units || 'px'})`);
+    this.setStyle('transform', `translateY(0${this.units})`);
     this.elementIsHidden.next(false);
   }
 
@@ -69,7 +101,7 @@ export class HideableHeaderDirective {
    * Hides the element
    */
   public hide() {
-    this.setStyle('transform', `translateY(-${this.getViewProperties().transitionHeight}${this.config.units || 'px'})`);
+    this.setStyle('transform', `translateY(-${this.getViewProperties().transitionHeight}${this.units})`);
     this.elementIsHidden.next(true);
   }
 
@@ -77,7 +109,7 @@ export class HideableHeaderDirective {
     return {
       scrollTop: window.document.scrollingElement.scrollTop,
       lastScrollTop: this.lastScrollTop,
-      transitionHeight: this.config.height ? this.config.height : this.headerElement.nativeElement.clientHeight
+      transitionHeight: this.height ? this.height : this.headerElement.nativeElement.clientHeight
     };
   }
 

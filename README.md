@@ -16,12 +16,7 @@ npm install ngx-hideable-header
 
 ## Usage
 
-The HideableHeaderModule provides a single `forRoot` configuration to add to an applications root module. This configuration provides
-several options to make sure the directive is set to handle the correct size of header. When you want to include the directive in any feature
-modules of your application you only have to import the `HideableHeaderModule` module
-
-By default the direcitve will detect the height of the element it is bound to and use this as the transition height.  If you want to overide
-this then you can pass the height value.  The default units for this value is pixels (`px`).
+The HideableHeaderModule should be imported into any module you want to use it in. This will provide the `hideableHeader` directive to use in your components.
 
 ```typescript
 import { HideableHeaderModule } from 'ngx-hideable-header';
@@ -30,14 +25,7 @@ import { HideableHeaderModule } from 'ngx-hideable-header';
   ...
   imports: [
     BrowserModule,
-    HideableHeaderModule.forRoot({
-      height: 80,
-      units: 'px',
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      transition: 'all 0.5s'
-    })
+    HideableHeaderModule,
   ]
   ...
 })
@@ -48,12 +36,20 @@ export class AppModule {}
 
 Attach the directive to any header component you want to be hidable. The directive has two configuration attributes - `disable` and `reverse`.
 
-- `disable`: This property stops the default behaviour of the directive.
-- `reverse`: This property will reverse when the show/hide triggers, useful for things you would like to appear after the user scrolls.
+- `[disable]=false`: This property stops the default behaviour of the directive.
+- `[reverse]=false`: This property will reverse when the show/hide triggers, useful for things you would like to appear after the user scrolls.
+
+You can also bind any style properties, but there are 4 default values set when using the directive.  These are applied to the element you attach this
+to:
+
+- `[style.position]="fixed"`
+- `[style.top]="0"`
+- `[style.left]="0"`
+- `[style.transition]="all 0.5s"`
 
 ```html
 <div class="container">
-  <nav hideableHeader [disable]=true [reverse]=false>
+  <nav hideableHeader [disable]=true [reverse]=false [style.transition]="all 1s ease-out">
     <a href="#" id="brand">Brand</a>
   </nav>
 </div>

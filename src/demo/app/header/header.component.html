@@ -1,7 +1,9 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top"
   hideableHeader
   [disable]=disable.value
-  [reverse]=reverse.value>
+  [reverse]=reverse.value
+  [style.transition]=transitionStyle.value
+  >
   <a class="navbar-brand"
     href="#">Navbar</a>
   <button class="navbar-toggler"
@@ -77,8 +79,7 @@
     <p>
       <label for="selectTransition">Change Transition:</label>
       <select id="selectTransition"
-        #transitionStyle
-        (change)="switchTransition(transitionStyle.value)">
+        #transitionStyle>
         <option value="all 0.5s">all 0.5s</option>
         <option value="all 1s ease-in">all 1s ease-in</option>
         <option value="all 1s ease-out">all 1s ease-out</option>
