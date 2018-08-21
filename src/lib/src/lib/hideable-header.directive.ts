@@ -79,12 +79,15 @@ export class HideableHeaderDirective {
   }
 
   /**
-   * Properties required to calculate if the element shows or hides
+   * Observable value of the current {@link HideableHeaderProperties}
    */
   get viewProperties(): Observable<HideableHeaderProperties> {
     return this.currentViewProperties.asObservable();
   }
 
+  /**
+   * Observable value of the current hidden state.
+   */
   get isHidden(): Observable<boolean> {
     return this.elementIsHidden.asObservable();
   }
