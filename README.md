@@ -37,7 +37,7 @@ export class AppModule {}
 Attach the directive to any header component you want to be hidable. The directive has some configuration attributes:
 
 - `[scrollAt]=<number>`: Property to start hiding the element at, the default is 2 x the height of the component clientHeight.
-- `[transition]="1s linear": Property defining the transition of the animation.  This property supports all transition types via sanitization.
+- `[transition]="1s linear"`: Property defining the transition of the animation.  This property supports all transition types via sanitization.
 - `[disable]=false`: This property stops the default behaviour of the directive.
 - `[reverse]=false`: This property will reverse when the show/hide triggers, useful for things you would like to appear after the user scrolls.
 - `[height]=<number>`: Property to overide the height of the transition
