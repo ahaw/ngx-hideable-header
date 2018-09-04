@@ -1,11 +1,11 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top"
   hideableHeader
-  [disable]=disable.value
-  [reverse]=reverse.value
-  [style.transition]=transitionStyle.value
-  >
+  [disable]="demoControls.value.disable"
+  [reverse]="demoControls.value.reverse"
+  [scrollAt]="demoControls.value.scrollAt"
+  [transition]="transition">
   <a class="navbar-brand"
-    href="#">Navbar</a>
+    href="#">Angular 6 Hidable Header</a>
   <button class="navbar-toggler"
     type="button"
     data-toggle="collapse"
@@ -27,67 +27,105 @@
         <a class="nav-link"
           href="#">Link</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled"
-          href="#">Disabled</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle"
-          href="#"
-          id="dropdown01"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false">Dropdown</a>
-        <div class="dropdown-menu"
-          aria-labelledby="dropdown01">
-          <a class="dropdown-item"
-            href="#">Action</a>
-          <a class="dropdown-item"
-            href="#">Another action</a>
-          <a class="dropdown-item"
-            href="#">Something else here</a>
-        </div>
-      </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2"
-        type="text"
-        placeholder="Search"
-        aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0"
-        type="submit">Search</button>
-    </form>
   </div>
 </nav>
 
 <main role="main"
   class="container content">
+  <div class="card-group">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Control Panel</h2>
+        <h4 class="card-subtitle mb-2 text-muted">Select options to control the demo
+          header
+        </h4>
+        <form [formGroup]="demoControls">
 
-  <div class="starter-template">
-    <h1>Hidable Header Options and Methods</h1>
-    <p class="lead">
-      <input (change)="disable.next(!disable.value)"
-        type="checkbox"> Disable Hiding?
-      <input (change)="reverse.next(!reverse.value)"
-        type="checkbox"> Reverse?
-    </p>
-    <p>
-      <code><pre>{{this.hidableElement.viewProperties | async | json}}</pre></code>
+          <div class="form-group">
+            <div class="form-check form-check-inline">
+              <input formControlName="disable"
+                id="disable"
+                class="form-check-input"
+                type="checkbox">
+              <label class="form-check-label"
+                for="inlineCheckbox1">Disable Hidable Header?</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input formControlName="reverse"
+                id="reverse"
+                class="form-check-input"
+                type="checkbox">
+              <label class="form-check-label"
+                for="inlineCheckbox2">Reverse Hiding?</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="transition">Scroll At Height (px)</label>
+            <input type="number"
+              min="0"
+              step="1"
+              class="form-control"
+              formControlName="scrollAt"
+              id="scrollAt" />
+          </div>
+          <div class="form-group">
+            <label for="hideTransition">Hide Transition</label>
+            <div class="input-group">
+              <input type="number"
+                min="0"
+                step="0.1"
+                class="form-control"
+                formControlName="hideTransitionTime"
+                id="hideTransitionTime" />
+              <div class="input-group-append">
+                <select formControlName="hideTransition"
+                  id="hideTransition">
+                  <option *ngFor="let option of transitions"
+                    [value]="option[0]"
+                    [selected]="option[0] === demoControls.value.hideTransition">{{option[1]}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="showTransition">Show Transition</label>
+            <div class="input-group">
+              <input type="number"
+                min="0"
+                step="0.1"
+                class="form-control"
+                formControlName="showTransitionTime"
+                id="showTransitionTime" />
+              <div class="input-group-append">
+                <select formControlName="showTransition"
+                  id="showTransition">
+                  <option *ngFor="let option of transitions"
+                    [value]="option[0]"
+                    [selected]="option[0] === demoControls.value.showTransition">{{option[1]}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
-      <span>Header Hidden?: {{this.hidableElement.isHidden | async}}</span>
-    </p>
-    <p>
-      <label for="selectTransition">Change Transition:</label>
-      <select id="selectTransition"
-        #transitionStyle>
-        <option value="all 0.5s">all 0.5s</option>
-        <option value="all 1s ease-in">all 1s ease-in</option>
-        <option value="all 1s ease-out">all 1s ease-out</option>
-        <option value="all 1.5s ease-in-out">all 1.5s ease-in-out</option>
-      </select>
-    </p>
-    <button (click)="hide()">Hide Header</button>
-    <button (click)="show()">Show Header</button>
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Header API</h2>
+        <h4 class="card-subtitle mb-2 text-muted">Control the header via it's API
+        </h4>
+        <button (click)="hide()"
+          class="btn"
+          [ngClass]="{'btn-primary': !(hidableElement.isHidden | async)}"
+          >Hide
+          Header</button>
+        <button (click)="show()"
+          class="btn"
+          [ngClass]="{'btn-primary': (hidableElement.isHidden | async)}">Show
+          Header</button>
+      </div>
+    </div>
   </div>
-
 </main>
