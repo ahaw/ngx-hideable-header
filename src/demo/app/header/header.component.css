@@ -1,12 +1,12 @@
 .container {
-    height: 3000px;
+  height: 3000px;
 }
 
 .navbar {
-    height: 80px;
-    width: 100%;
+  height: 80px;
+  width: 100%;
 }
 
 .content {
-    margin-top: 80px;
+  margin-top: 80px;
 }

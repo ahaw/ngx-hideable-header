@@ -34,22 +34,30 @@ export class AppModule {}
 
 ### Directive Use
 
-Attach the directive to any header component you want to be hidable. The directive has two configuration attributes - `disable` and `reverse`.
+Attach the directive to any header component you want to be hidable. The directive has some configuration attributes:
 
+- `[scrollAt]=<number>`: Property to start hiding the element at, the default is 2 x the height of the component clientHeight.
+- `[transition]="1s linear"`: Property defining the transition of the animation.  This property supports all transition types via sanitization.
 - `[disable]=false`: This property stops the default behaviour of the directive.
 - `[reverse]=false`: This property will reverse when the show/hide triggers, useful for things you would like to appear after the user scrolls.
+- `[height]=<number>`: Property to overide the height of the transition
+- `[units]="px"`: Property to define the style of units for transition
 
-You can also bind any style properties, but there are 4 default values set when using the directive.  These are applied to the element you attach this
-to:
+There are also some style properties set to the host element of this directive.  You can change these with element attributes:
 
 - `[style.position]="fixed"`
 - `[style.top]="0"`
 - `[style.left]="0"`
-- `[style.transition]="all 0.5s"`
 
 ```html
 <div class="container">
-  <nav hideableHeader [disable]=true [reverse]=false [style.transition]="all 1s ease-out">
+  <nav hideableHeader
+    [disable]=true
+    [reverse]=false
+    [transition]="1s ease-out"
+    [scrollAt]=200
+    [style.position]="relative"
+    >
     <a href="#" id="brand">Brand</a>
   </nav>
 </div>

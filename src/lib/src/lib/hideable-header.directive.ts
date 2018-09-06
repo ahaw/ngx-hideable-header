@@ -1,6 +1,7 @@
 import { Directive, ElementRef, HostListener, Inject, Input, PLATFORM_ID, Renderer2, HostBinding } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 
 /**
  * View Properties of the directive
@@ -20,6 +21,14 @@ export interface HideableHeaderProperties {
   transitionHeight: number;
 }
 
+/**
+ * The HideableHeaderDirective provides functionality to hide and show a header element based on
+ * the properties specified such as `scrollAt` height. There is also an API to control the `transition`
+ * speed and function
+ *
+ * @example
+<nav class="header" hideableHeader [scrollAt]=200 [transition]="1s ease"></nav>
+ */
 @Directive({
   selector: '[hideableHeader]'
 })
@@ -30,28 +39,41 @@ export class HideableHeaderDirective {
    * Height to transition the element by. Default is the `clientHeight` of the element.
    */
   @Input()
-  height = this.headerElement.nativeElement.clientHeight;
+  public height = this.headerElement.nativeElement.clientHeight;
 
   /**
    * The type of CSS unit to transition with, default is 'px' (pixels)
    */
   @Input()
-  units = 'px';
+  public units = 'px';
 
   /**
    * Disable the functionality of the directive.
    */
   @Input()
-  disable = false;
+  public disable = false;
 
   /**
    * Instead of hiding the header on scroll, this will make the header appear on scroll from a hidden position.
    * Useful for utility bars.
    */
   @Input()
-  reverse = false;
+  public reverse = false;
 
-  private elementIsHidden = new BehaviorSubject<boolean>(false);
+  /**
+   * Controls the height at which the element will start hiding. By default the value is twice the height of
+   * the header
+   */
+  @Input()
+  public scrollAt = this.height + this.height;
+
+  /**
+   * The transition time and function to use for the animation
+   */
+  @Input()
+  public transition = '1s linear';
+
+  private elementIsHidden: Subject<boolean> = new ReplaySubject<boolean>(1);
 
   private currentViewProperties = new BehaviorSubject<HideableHeaderProperties>(this.getViewProperties());
 
@@ -59,6 +81,7 @@ export class HideableHeaderDirective {
     private headerElement: ElementRef,
     private render: Renderer2,
     @Inject(PLATFORM_ID) private platformId: string,
+    private sanitizer: DomSanitizer
   ) {}
 
   @HostBinding('style.position')
@@ -68,7 +91,9 @@ export class HideableHeaderDirective {
   @HostBinding('style.left')
   left = '0';
   @HostBinding('style.transition')
-  transition = 'all 0.5s';
+  get hostElementTransform(): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(this.transition);
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
@@ -81,19 +106,19 @@ export class HideableHeaderDirective {
   /**
    * Observable value of the current {@link HideableHeaderProperties}
    */
-  get viewProperties(): Observable<HideableHeaderProperties> {
+  public get viewProperties(): Observable<HideableHeaderProperties> {
     return this.currentViewProperties.asObservable();
   }
 
   /**
    * Observable value of the current hidden state.
    */
-  get isHidden(): Observable<boolean> {
+  public get isHidden(): Observable<boolean> {
     return this.elementIsHidden.asObservable();
   }
 
   /**
-   * Shows the element
+   * Shows the host element
    */
   public show() {
     this.setStyle('transform', `translateY(0${this.units})`);
@@ -101,13 +126,16 @@ export class HideableHeaderDirective {
   }
 
   /**
-   * Hides the element
+   * Hides the host element
    */
   public hide() {
     this.setStyle('transform', `translateY(-${this.getViewProperties().transitionHeight}${this.units})`);
     this.elementIsHidden.next(true);
   }
 
+  /**
+   * Gets a map of the current view properties
+   */
   private getViewProperties(): HideableHeaderProperties {
     return {
       scrollTop: window.document.scrollingElement.scrollTop,
@@ -120,9 +148,7 @@ export class HideableHeaderDirective {
    * Calculates if an element should be hidden
    */
   private hideElement = (viewProps: HideableHeaderProperties): boolean =>
-    viewProps.lastScrollTop > 0 &&
-    viewProps.lastScrollTop < viewProps.scrollTop &&
-    viewProps.scrollTop > viewProps.transitionHeight + viewProps.transitionHeight;
+    viewProps.lastScrollTop > 0 && viewProps.lastScrollTop < viewProps.scrollTop && viewProps.scrollTop > this.scrollAt;
 
   /**
    * Calculates if an element should be shown
@@ -130,6 +156,9 @@ export class HideableHeaderDirective {
   private showElement = (viewProps: HideableHeaderProperties): boolean =>
     viewProps.lastScrollTop > viewProps.scrollTop && !(viewProps.scrollTop <= viewProps.transitionHeight);
 
+  /**
+   * Method called on scroll event
+   */
   private onScroll(viewProps: HideableHeaderProperties) {
     this.currentViewProperties.next(viewProps);
     if ((!this.reverse && this.hideElement(viewProps)) || (this.reverse && this.showElement(viewProps))) {
@@ -140,6 +169,9 @@ export class HideableHeaderDirective {
     this.lastScrollTop = viewProps.scrollTop;
   }
 
+  /**
+   * Wrapper to set the style
+   */
   private setStyle(operation: string, value: string) {
     this.render.setStyle(this.headerElement.nativeElement, operation, value);
   }

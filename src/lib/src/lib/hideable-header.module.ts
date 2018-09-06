@@ -1,5 +1,6 @@
-import { HideableHeaderDirective } from './hideable-header.directive';
 import { NgModule } from '@angular/core';
+import { HideableHeaderDirective } from './hideable-header.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /**
  * The HideableHeaderModule provides the [hideableHeader] directive/
@@ -19,6 +20,7 @@ imports: [
 ```
  */
 @NgModule({
+  imports: [BrowserAnimationsModule],
   declarations: [HideableHeaderDirective],
   exports: [HideableHeaderDirective]
 })
